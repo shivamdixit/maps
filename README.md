@@ -21,3 +21,7 @@ Since the Directions service is asynchronous, we cannot access the array of tota
 
 Limitations:
 optimizeWaypoint feature works only when number of waypoints are less than 8. So if the number of waypoints are more than 8 in above problem then we can use Dijkstra's algorithm to find the shortest possible path (Travelling Salesman Problem).
+
+
+References:
+https://developers.google.com/maps/documentation/javascript/
