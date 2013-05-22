@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+      html { height: 100% }
+      body { height: 100%; margin: 0; padding: 0 }
+      #map-canvas { height: 80%}
+    </style>
+    <script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBzRvHQoE265Wfz6gRRrzfpfKxBuj6_dcg&sensor=false">
+    </script>
+    <script type="text/javascript">
+      //Declaring global variables
+      var totalDistance;
+      var directionsDisplay;
+      var directionsService = new google.maps.DirectionsService();
+      var map;
+      var origin = "Mellon Labs, MG Ramachandran Rd, Anna Colony, Besant Nagar, Chennai, Tamil Nadu"; 
+      var points = new Array("Guru Nanak College, Velachery, Chennai, Tamil Nadu","Gandhi Nagar Club, Gandhi Nagar 4th Main Road, Gandhi Nagar, Adyar, Chennai, Tamil Nadu","TICEL Biotech Park, Tharamani, Chennai, Tamil Nadu","The B Bar, MRC Nagar, Raja Annamalai Puram, Chennai, Tamil Nadu","Advantix Technologies, Chamiers Road, Nandanam, Chennai, Tamil Nadu","Chemplast Cricket Ground, Chennai, Tamil Nadu");
+
+      function calcDistance(){
+        var matrixService = new google.maps.DistanceMatrixService();
+        matrixService.getDistanceMatrix({
+          origins: [origin],
+          destinations: points,
+          travelMode: google.maps.TravelMode.DRIVING,
+          avoidHighways: false,
+          avoidTolls: false
+        },callback);  
+      }
+
+      function callback(response,status) {
+        if(status != google.maps.DistanceMatrixStatus.OK) {
+          alert("Sorry, it was an error: " + status);
+        }
+
+        else
+        {
+          var routes = response.rows[0];
+          var sortable = [];
+          for(var i= routes.elements.length-1; i>=0; i--)
+          {
+            var routeLength = routes.elements[i].distance.value;
+            sortable.push([points[i],routeLength]);
+          }
+
+          sortable.sort(function(a,b){
+            return a[1]-b[1];
+          });
+
+          var waypoints = new Array();
+
+          for(var j=0;j< sortable.length-1;j++)
+          {
+            console.log(sortable[j][0]);
+            waypoints.push({
+              location: sortable[j][0],
+              stopover: true
+            });
+          }
+          var start = origin;
+          var end = sortable[sortable.length-1][0];
+          calcRoute(start,end,waypoints);
+        }
+      }
+      function initialize() {
+        directionsDisplay = new google.maps.DirectionsRenderer();
+        var mapOptions = {
+          center: new google.maps.LatLng(13.0604220, 80.2495830), //Placing the center of map to Mellon Labs, Chennai
+          zoom: 10,
+          mapTypeId: google.maps.MapTypeId.ROADMAP,
+          draggableCursor: "crosshair"
+        }; 
+        map = new google.maps.Map(document.getElementById("map-canvas"),
+            mapOptions);
+        directionsDisplay.setMap(map);
+      }
+      function calcRoute(start,end,waypoints) {
+        var request = {
+        origin: start,
+        destination: end,
+        waypoints: waypoints,
+        optimizeWaypoints: true,
+        travelMode: google.maps.TravelMode.DRIVING
+        };
+        directionsService.route(request, function(response, status) { 
+        if (status == google.maps.DirectionsStatus.OK) {
+          directionsDisplay.setDirections(response);
+          var route = response.routes[0];
+          totalDistance = 0;
+          for ( var i=0;i<route.legs.length;i++)
+          {
+            totalDistance+=route.legs[i].distance.value;
+          } 
+          alert("Least total Distance for the given route is " +totalDistance/1000 + "km")
+          }
+        });
+      }
+      google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+  </head>
+  <body>
+    <div id="map-canvas"> </div>
+    <input type="submit" onclick="calcDistance();">
+    <div id="totalDistance"></div>
+  </body>
+</html>
