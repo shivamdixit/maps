@@ -19,7 +19,7 @@
       var origin = "Mellon Labs, MG Ramachandran Rd, Anna Colony, Besant Nagar, Chennai, Tamil Nadu"; 
       var points = new Array("Guru Nanak College, Velachery, Chennai, Tamil Nadu","Gandhi Nagar Club, Gandhi Nagar 4th Main Road, Gandhi Nagar, Adyar, Chennai, Tamil Nadu","TICEL Biotech Park, Tharamani, Chennai, Tamil Nadu","The B Bar, MRC Nagar, Raja Annamalai Puram, Chennai, Tamil Nadu","Advantix Technologies, Chamiers Road, Nandanam, Chennai, Tamil Nadu","Chemplast Cricket Ground, Chennai, Tamil Nadu");
 
-      function calcDistance(){
+      function calcDistance(){                                 //To calculate distance
         var matrixService = new google.maps.DistanceMatrixService();
         matrixService.getDistanceMatrix({
           origins: [origin],
@@ -64,7 +64,7 @@
           calcRoute(start,end,waypoints);
         }
       }
-      function initialize() {
+      function initialize() {                 //To initialize google maps
         directionsDisplay = new google.maps.DirectionsRenderer();
         var mapOptions = {
           center: new google.maps.LatLng(13.0604220, 80.2495830), //Placing the center of map to Mellon Labs, Chennai
@@ -76,7 +76,7 @@
             mapOptions);
         directionsDisplay.setMap(map);
       }
-      function calcRoute(start,end,waypoints) {
+      function calcRoute(start,end,waypoints) {   //To calculate shortest route
         var request = {
         origin: start,
         destination: end,
@@ -97,7 +97,7 @@
           }
         });
       }
-      google.maps.event.addDomListener(window, 'load', initialize);
+      google.maps.event.addDomListener(window, 'load', initialize);  //To show map when website fully loaded
     </script>
   </head>
   <body>
